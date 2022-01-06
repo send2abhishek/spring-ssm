@@ -10,8 +10,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class StateMachineConfigTest {
 
@@ -29,7 +27,7 @@ class StateMachineConfigTest {
 
         System.out.println("state machine is2 "+ sm.getState().toString());
 
-        sm.sendEvent(PaymentEvent.PRE_AUTH_APPROVE);
+       // sm.sendEvent(PaymentEvent.PRE_AUTH_APPROVE);
 
         System.out.println("state machine is3 "+ sm.getState().toString());
 

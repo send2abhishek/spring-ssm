@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+// this interceptor will get called when we do send msg to stateMachine
 @Component
 @RequiredArgsConstructor
 public class PaymentStateChangeInterceptor extends StateMachineInterceptorAdapter<PaymentState, PaymentEvent> {
@@ -26,8 +27,9 @@ public class PaymentStateChangeInterceptor extends StateMachineInterceptorAdapte
                                StateMachine<PaymentState, PaymentEvent> stateMachine,
                                StateMachine<PaymentState, PaymentEvent> rootStateMachine) {
 
-        // before changing the state set the state machine listener
+        // before changing the state set the state machine listener, and save to db
         Optional.ofNullable(message).ifPresent(msg -> {
+            System.out.println("if the msg "+msg);
             Optional.ofNullable(Long.class.cast(msg.getHeaders().getOrDefault(PaymentServiceImpl.PAYMENT_ID_HEADER, -1L)))
                     .ifPresent(paymentId -> {
                         Payment payment = paymentRepository.getOne(paymentId);

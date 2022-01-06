@@ -31,8 +31,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public StateMachine<PaymentState, PaymentEvent> preAuth(Long paymentId) {
+        // get state from db and update the state in stateMachine
         StateMachine<PaymentState, PaymentEvent> sm = build(paymentId);
-
+            // send the event to state machine that it is pre_Authorised
         sendEvent(paymentId, sm, PaymentEvent.PRE_AUTHORIZE);
         return sm;
     }
@@ -72,7 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
         // reset the statemachine latest state in sm pertaining to payment state and start back the state machine
         sm.getStateMachineAccessor()
                 .doWithAllRegions(sma -> {
-                    // add the interceptor
+                    // add the interceptor, to track the message event
                     sma.addStateMachineInterceptor(stateChangeInterceptor);
                     sma.resetStateMachine(new DefaultStateMachineContext<>(payment.getState(), null, null, null));
                 });

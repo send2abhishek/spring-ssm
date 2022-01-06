@@ -28,14 +28,16 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
         states.withStates()
                 .initial(PaymentState.NEW)
                 .states(EnumSet.allOf(PaymentState.class)) // loads all the states
+                // next we have to define the termination conditions when state machine can be treated as done
                 .end(PaymentState.AUTH) // if any of states such as auth,pre_auth,auth_error comes state machine will set as done
                 .end(PaymentState.PRE_AUTH_ERROR)
                 .end(PaymentState.AUTH_ERROR);
     }
 
+    // need to setup the state transition which will get triggered based on the events. So it is clear that based on event state changes
     @Override
     public void configure(StateMachineTransitionConfigurer<PaymentState, PaymentEvent> transitions) throws Exception {
-        // it is defined the state transistions when state changes the appropriate events get called. This is what it is defined here
+
         transitions.withExternal()
                 .source(PaymentState.NEW) // begining state
                 .target(PaymentState.NEW).event(PaymentEvent.PRE_AUTHORIZE).action(preAuthAction())
